@@ -9,11 +9,9 @@ import reactor.core.publisher.Mono;
 
 class ItemClient {
 	private final WebClient client;
-	private final boolean extractErrorFromResponse;
 
-	ItemClient(String baseUrl, ClientHttpConnector clientConnector, boolean extractErrorFromResponse) {
+	ItemClient(String baseUrl, ClientHttpConnector clientConnector) {
 		client = WebClient.builder().clientConnector(clientConnector).baseUrl(baseUrl).build();
-		this.extractErrorFromResponse = extractErrorFromResponse;
 	}
 
 	Mono<ItemMetadata> head(String path) {
@@ -54,12 +52,11 @@ class ItemClient {
 	}
 
 	private Mono<String> toMessage(ClientResponse response) {
-		if (extractErrorFromResponse) {
-			// fails:
-			return response.bodyToMono(String.class);
-		} else {
-			// works:
-			return Mono.just("An HTTP error happened (response code = " + response.statusCode().value() + ")");
-		}
+		return response.bodyToMono(String.class).switchIfEmpty(Mono.just(defaultExceptionMessage(response)));
+
+	}
+
+	private static String defaultExceptionMessage(ClientResponse response) {
+		return "An HTTP error happened (response code = " + response.statusCode().value() + ")";
 	}
 }

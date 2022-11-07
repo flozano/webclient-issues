@@ -23,12 +23,6 @@ import reactor.netty.http.client.HttpClient;
 
 public class ItemClientTest {
 
-	/*
-	 * If true, the exception generated inside the exchangeToMono IS NOT propagated.
-	 * If false, the exception generated inside the exchangeToMono IS propagated
-	 */
-	private static final boolean EXTRACT_BODY_IN_CASE_OF_ERROR = true;
-
 	@Rule
 	public MockServerRule mockServerRule = new MockServerRule(this);
 
@@ -69,8 +63,7 @@ public class ItemClientTest {
 		mockServerClient.when(request().withMethod("GET").withPath("/somewhere-500"))
 				.respond(response().withStatusCode(500).withHeader("code", "error500"));
 
-		itemClient = new ItemClient("http://127.0.0.1:" + mockServerRule.getPort(), nettyConnector(),
-				EXTRACT_BODY_IN_CASE_OF_ERROR);
+		itemClient = new ItemClient("http://127.0.0.1:" + mockServerRule.getPort(), nettyConnector());
 	}
 
 	@Test
