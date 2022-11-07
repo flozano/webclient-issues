@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration>
+
+<configuration>
+	<import
+		class="ch.qos.logback.classic.encoder.PatternLayoutEncoder" />
+	<import class="ch.qos.logback.core.ConsoleAppender" />
+
+	<appender name="STDOUT" class="ConsoleAppender">
+		<encoder class="PatternLayoutEncoder">
+			<pattern>%d{HH:mm:ss.SSS}\t[%thread]\t%-5level\t%logger\t%msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<root level="INFO">
+		<appender-ref ref="STDOUT" />
+	</root>
+	<logger name="org.mockserver" level="WARN" />
+	<logger name="org.springframework" level="TRACE" />
+</configuration>
